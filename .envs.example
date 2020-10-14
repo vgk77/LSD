@@ -1,0 +1,14 @@
+#General
+DEBUG=True
+
+# Django
+# ------------------------------------------------------------------------------
+SECRET_KEY=my_local_secret_key
+
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_DB=lsd_django_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres_local_Pa$$w0rd
+POSTGRES_SERVICE=db
+POSTGRES_PORT=5432
