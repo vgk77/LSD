@@ -1,9 +1,13 @@
 from rest_framework.decorators import api_view
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
-from .serializers import CustomerSerializer
+from .serializers import CustomerSerializer, TicketSerializer
+from ..models import Ticket
 
 
+@swagger_auto_schema(methods=['POST'], request_body=CustomerSerializer)
 @api_view(['POST'])
 def create_new_customer(request):
     if request.method == 'POST':
@@ -13,3 +17,8 @@ def create_new_customer(request):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+
+class TicketsViewSet(ModelViewSet):
+    def get_queryset(self):
+        return Ticket.objects.all()
+    serializer_class = TicketSerializer

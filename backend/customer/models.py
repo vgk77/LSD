@@ -25,7 +25,7 @@ class Ticket(models.Model):
         null=True,
         blank=True,
     )
-    number = models.IntegerField()
+    number = models.AutoField(primary_key=True)
     topic = models.TextField()
     message = models.TextField()
     attachments = models.FileField(blank=True, null=True)
