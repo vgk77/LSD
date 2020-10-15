@@ -33,6 +33,8 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = [
+            'updated_at',
+            'created_at',
             'number',
             'customer',
             'topic',
