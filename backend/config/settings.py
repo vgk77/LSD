@@ -144,3 +144,33 @@ STATIC_URL = '/static/'
 # Media folder
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+# Logs
+if not os.path.exists('logs'):
+    os.makedirs('logs/')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {asctime} | {message}',
+            'style': '{'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/console.log',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'customer': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        }
+    }
+}

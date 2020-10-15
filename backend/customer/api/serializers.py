@@ -21,6 +21,7 @@ class CustomerInTicketSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.name = validated_data['name']
         instance.telegram_id = validated_data['telegram_id']
+        instance.save()
         return instance
 
 
@@ -45,6 +46,7 @@ class TicketSerializer(serializers.ModelSerializer):
         customer, created = Customer.objects.get_or_create(telegram_id=customer_data['telegram_id'])
         if created:
             customer.name = customer_data['name']
+            customer.save()
         return Ticket.objects.create(customer=customer, **validated_data)
 
     def update(self, instance, validated_data):
