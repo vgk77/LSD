@@ -22,3 +22,10 @@ class TicketsViewSet(ModelViewSet):
     def get_queryset(self):
         return Ticket.objects.all()
     serializer_class = TicketSerializer
+
+
+@api_view(['GET'])
+def get_tickets_by_telegram_id(request, telegram_id):
+    if request.method == 'GET':
+        serializer = TicketSerializer(Ticket.objects.filter(customer__telegram_id=telegram_id), many=True)
+        return Response(serializer.data, status=200)

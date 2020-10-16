@@ -21,4 +21,4 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ('topic', 'status', 'number', 'created_at', 'updated_at', )
-    readonly_fields = ('number', )
+    readonly_fields = ('number', 'created_at', 'updated_at')
