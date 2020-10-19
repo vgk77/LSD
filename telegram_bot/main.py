@@ -17,9 +17,9 @@ def main():
             States.MAIN_MENU: [MessageHandler(Filters.regex('Create a new issue'), write_issue),
                                MessageHandler(Filters.regex('Show my issues'), show_issues)],
             States.WRITE_ISSUE: [MessageHandler(Filters.regex('Back to main menu'), main_menu),
-                                 MessageHandler(Filters.text or Filters.photo or Filters.video, apply_issue)],
+                                 MessageHandler(Filters.text, apply_issue)],
             States.APPLY_ISSUE: [MessageHandler(Filters.regex('Yes, send it'), issue_sent),
-                                 MessageHandler(Filters.regex('No, don\'t send it'), issue_not_sent)],
+                                 MessageHandler(Filters.regex('No, do not send it'), issue_not_sent)],
         },
         fallbacks=[]
     )

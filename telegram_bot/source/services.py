@@ -1,5 +1,6 @@
 import json
 import requests
+from datetime import datetime
 
 from config.settings import BACKEND_URL
 
@@ -11,8 +12,7 @@ GET_TICKETS_BY_TELEGRAM_ID_URI = BACKEND_URL+'tickets/by-user-id/'
 
 def post_request(uri, **kwargs):
     try:
-        print(kwargs)
-        response = requests.post(uri, data=kwargs)
+        response = requests.post(uri, json=kwargs)
         status = response.status_code
         content = response.content
     except requests.exceptions.ConnectionError:
@@ -32,9 +32,10 @@ def get_request(uri, **kwargs):
     return status, content
 
 
-def is_message_valid(message):
-    if (type(message) is not str) or len(message) < 3:
+def is_message_valid(message: str):
+    if len(message) <= 3:
         return False
+    return True
 
 
 def create_topic_from_message(message: str):
@@ -54,12 +55,15 @@ def create_ticket(name: str, telegram_id: int, message: str, attachments=None):
                                    message=message,
                                    customer={'name': name, 'telegram_id': telegram_id},
                                    attachments=attachments)
-    print(content)
     if status == 201:
         return True
 
 
 def get_tickets(telegram_id: int):
-    status, content = get_request(GET_TICKETS_BY_TELEGRAM_ID_URI, telegram_id=telegram_id)
-    print(content)
-    return content
+    status, content = get_request(GET_TICKETS_BY_TELEGRAM_ID_URI+str(telegram_id))
+    return json.loads(content)
+
+
+def get_beautiful_time(dt):
+    new_dt = datetime.fromisoformat(dt)
+    return new_dt.strftime('%Y-%m-%d %H:%M:%S')

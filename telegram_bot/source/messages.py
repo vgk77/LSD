@@ -1,3 +1,5 @@
+from .services import get_beautiful_time
+
 class Messages:
     START = '<b>PGSM Support.</b> \n' \
             'Welcome to PriceGSM support telegram bot. Here you can write an issue, if you think that something ' \
@@ -19,3 +21,11 @@ class Messages:
                       'The text of your complaint:\n' \
                       '{}\n\n' \
                       '<i>Do you want to send this issue?</i>'
+
+    @staticmethod
+    def get_message_from_tickets_info(**kwargs):
+        text = F'<b>{kwargs["topic"]}</b>\n ' \
+               F'{kwargs["message"]}\n\n' \
+               F'Status: {kwargs["status"]}\n' \
+               F'Date of creation: {get_beautiful_time(kwargs["created_at"])}'
+        return text

@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext, ConversationHandler
 
 from .messages import Messages
 from .keyboards import MAIN_MENU_KEYBOARD, BACK_TO_MAIN_MENU_KEYBOARD, YES_NO_KEYBOARD
-from .services import create_new_user, create_ticket, get_tickets
+from .services import create_new_user, create_ticket, get_tickets, is_message_valid
 
 
 class States:
@@ -25,6 +25,9 @@ def write_issue(update: Update, context: CallbackContext):
 
 
 def apply_issue(update: Update, context: CallbackContext):
+    if not is_message_valid(update.message.text):
+        update.message.reply_html('Your message is not in a valid format.', reply_markup=BACK_TO_MAIN_MENU_KEYBOARD)
+        return States.WRITE_ISSUE
     context.user_data['user_issue'] = update.message.text  # saving the value that user wrote in previous message
     update.message.reply_html(Messages.APPLY_COMPLAINT.format(update.message.text), reply_markup=YES_NO_KEYBOARD)
     return States.APPLY_ISSUE
@@ -48,6 +51,8 @@ def issue_not_sent(update: Update, context: CallbackContext):
 
 def show_issues(update: Update, context: CallbackContext):
     content = get_tickets(update.effective_user.id)
+    for ticket in content:
+        update.message.reply_html(Messages.get_message_from_tickets_info(**ticket))
     update.message.reply_html(Messages.MAIN_MENU, reply_markup=MAIN_MENU_KEYBOARD)
     return States.MAIN_MENU
 
