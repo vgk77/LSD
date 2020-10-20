@@ -33,7 +33,7 @@ def get_request(uri, **kwargs):
 
 
 def is_message_valid(message: str):
-    if len(message) <= 3:
+    if len(message) <= 3 and not type(message) == str:
         return False
     return True
 
@@ -49,12 +49,25 @@ def create_new_user(name: str, telegram_id: int):
         return True
 
 
-def create_ticket(name: str, telegram_id: int, message: str, attachments=None):
+def create_ticket(name: str, telegram_id: int, message: str, attachment=None):
     status, content = post_request(TICKET_URI,
-                                   topic=create_topic_from_message(message),
                                    message=message,
-                                   customer={'name': name, 'telegram_id': telegram_id},
-                                   attachments=attachments)
+                                   topic=create_topic_from_message(message),
+                                   customer={'name': name, 'telegram_id': telegram_id})
+
+    if attachment:
+        import os
+        r = requests.get(attachment, allow_redirects=True)
+
+        file_extension = attachment.split('.')[::-1][0]
+        file_name = f'attachment_{telegram_id}_{json.loads(content)["number"]}.'+file_extension
+        if not os.path.exists('.temp'):
+            os.makedirs('.temp')
+        open('.temp/'+file_name, 'wb').write(r.content)
+
+        response = requests.patch(TICKET_URI+str(json.loads(content)['number'])+'/',
+                                  files={F'attachments': (file_name, open('.temp/'+file_name, 'rb'))})
+        os.remove('.temp/'+file_name)
     if status == 201:
         return True
 

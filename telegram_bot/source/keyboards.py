@@ -11,5 +11,5 @@ BACK_TO_MAIN_MENU_KEYBOARD = ReplyKeyboardMarkup([
 
 
 YES_NO_KEYBOARD = ReplyKeyboardMarkup([
-    [KeyboardButton('Yes, send it'), KeyboardButton('No, do not send it')]
-])
+    [KeyboardButton('Yes'), KeyboardButton('No')]
+], resize_keyboard=True)

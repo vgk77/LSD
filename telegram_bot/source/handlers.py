@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import CallbackContext, ConversationHandler
 
 from .messages import Messages
@@ -11,6 +11,7 @@ class States:
     BACK_TO_MAIN_MENU = 'Back to main menu'
     WRITE_ISSUE = 'Create a new issue'
     APPLY_ISSUE = 'Apply issue'
+    ATTACH_FILE = 'Attach file'
 
 
 def start(update: Update, context: CallbackContext):
@@ -20,7 +21,17 @@ def start(update: Update, context: CallbackContext):
 
 
 def write_issue(update: Update, context: CallbackContext):
-    update.message.reply_html(Messages.WRITE_COMPLAINT, reply_markup=BACK_TO_MAIN_MENU_KEYBOARD)
+    if 'photo' in update.message.to_dict() and update.message.to_dict()['photo']:
+        context.user_data['file_path'] = context.bot.get_file(update.message.photo[::-1][0]['file_id'])['file_path']
+    elif 'document' in update.message.to_dict():
+        context.user_data['file_path'] = context.bot.get_file(update.message.document['file_id'])['file_path']
+    elif 'video' in update.message.to_dict():
+        context.user_data['file_path'] = context.bot.get_file(update.message.video['file_id'])['file_path']
+    if 'file_path' in context.user_data:
+        update.message.reply_html('<i>Your file is in memory of the bot, it will be sent with your message</i>')
+    markup = ReplyKeyboardMarkup([[KeyboardButton('Back to main menu'), KeyboardButton('I want to attach a file')]],
+                                 resize_keyboard=True)
+    update.message.reply_html(Messages.WRITE_COMPLAINT, reply_markup=markup)
     return States.WRITE_ISSUE
 
 
@@ -34,17 +45,23 @@ def apply_issue(update: Update, context: CallbackContext):
 
 
 def issue_sent(update: Update, context: CallbackContext):
+    attachment = None
+    if 'file_path' in context.user_data:
+        attachment = context.user_data['file_path']
     if 'user_issue' in context.user_data:
         create_ticket(
             update.effective_user.username,
             update.effective_user.id,
             context.user_data['user_issue'],
+            attachment=attachment,
         )
+    context.user_data.clear()
     update.message.reply_html('Your issue was successfully sent.', reply_markup=BACK_TO_MAIN_MENU_KEYBOARD)
     return ConversationHandler.END
 
 
 def issue_not_sent(update: Update, context: CallbackContext):
+    context.user_data.clear()
     update.message.reply_html('You\'ve cancelled sending an issue.', reply_markup=BACK_TO_MAIN_MENU_KEYBOARD)
     return ConversationHandler.END
 
@@ -58,5 +75,13 @@ def show_issues(update: Update, context: CallbackContext):
 
 
 def main_menu(update: Update, context: CallbackContext):
+    context.user_data.clear()
     update.message.reply_html(Messages.MAIN_MENU, reply_markup=MAIN_MENU_KEYBOARD)
     return States.MAIN_MENU
+
+
+def attach_file(update: Update, context: CallbackContext):
+    markup = ReplyKeyboardMarkup([[KeyboardButton('Back to main menu'),
+                                   KeyboardButton('I do not want to attach a file')]], resize_keyboard=True)
+    update.message.reply_html('Now you can send a file.', reply_markup=markup)
+    return States.ATTACH_FILE
