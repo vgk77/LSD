@@ -12,3 +12,8 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres_local_Pa$$w0rd
 POSTGRES_SERVICE=db
 POSTGRES_PORT=5432
+
+# Telegram
+# ------------------------------------------------------------------------------
+TELEGRAM_BOT_TOKEN=2743729836:WHf1u2h8WUH3guDW832k4fh83hWBfy54y2m
+BACKEND_URL=http://app:8000/api/

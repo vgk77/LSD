@@ -1,6 +1,6 @@
 from django.db import models
 
-from .enums import TypeOfStatus
+from .enums import TypeOfTicketStatus
 
 
 class Customer(models.Model):
@@ -31,8 +31,8 @@ class Ticket(models.Model):
     attachments = models.FileField(blank=True, null=True)
     status = models.CharField(
         max_length=20,
-        choices=TypeOfStatus.CHOICES,
-        default=TypeOfStatus.new,
+        choices=TypeOfTicketStatus.CHOICES,
+        default=TypeOfTicketStatus.new,
     )
 
     def __str__(self):

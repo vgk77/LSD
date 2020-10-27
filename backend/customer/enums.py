@@ -1,4 +1,4 @@
-class TypeOfStatus:
+class TypeOfTicketStatus:
     new = 'New'
     in_progress = 'InProgress'
     closed = 'Closed'

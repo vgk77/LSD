@@ -26,3 +26,15 @@ services:
     depends_on:
       - db
     command: ./compose/django/dev_entrypoint.sh
+
+  telegram:
+    build:
+      context: ./telegram_bot
+      dockerfile: ./compose/DockerFile
+    env_file:
+      - .envs
+    volumes:
+      - ./telegram_bot:/app
+    depends_on:
+      - app
+    command: ./compose/dev_entrypoint.sh

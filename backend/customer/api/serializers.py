@@ -28,7 +28,7 @@ class CustomerInTicketSerializer(serializers.Serializer):
 class TicketSerializer(serializers.ModelSerializer):
     customer = CustomerInTicketSerializer(required=True)
     number = serializers.IntegerField(read_only=True)
-    attachments = serializers.FileField(required=False)
+    attachments = serializers.FileField(allow_null=True, required=False)
 
     class Meta:
         model = Ticket
