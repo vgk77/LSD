@@ -6,7 +6,7 @@ from config.settings import TELEGRAM_BOT_TOKEN
 
 
 def main():
-    updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
+    updater = Updater(token=TELEGRAM_BOT_TOKEN)
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
