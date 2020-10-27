@@ -278,3 +278,7 @@ tags
 # !.envs/.local/
 
 .idea/*
+
+
+### Media files
+backend/media/
