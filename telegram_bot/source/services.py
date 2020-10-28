@@ -39,7 +39,7 @@ def is_message_valid(message: str):
 
 
 def create_topic_from_message(message: str):
-    topic = message.split(' ')[0]
+    topic = ' '.join(message.split(' ')[:5])
     return topic
 
 
