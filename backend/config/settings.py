@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     
-    'customer.apps.CustomerAppConfig'
+    'customer.apps.CustomerAppConfig',
+    'telegram.apps.TelegramAppConfig',
 ]
 
 MIDDLEWARE = [
