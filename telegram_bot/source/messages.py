@@ -1,5 +1,6 @@
 from .services import get_beautiful_time
 
+
 class Messages:
     START = '<b>PGSM Support.</b> \n' \
             'Welcome to PriceGSM support telegram bot. Here you can write an issue, if you think that something ' \

@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 
 api_patterns = [
     path('', include('customer.api.urls')),
+    path('', include('telegram.api.urls')),
 ]
 
 urlpatterns = [
