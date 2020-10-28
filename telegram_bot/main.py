@@ -1,7 +1,8 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler,\
+    CallbackQueryHandler
 
-from source.handlers import States, start, apply_issue, write_issue, main_menu, show_issues, issue_sent,\
-    issue_not_sent, attach_file
+from source.handlers import States, start, main_menu, issue_sent, add_ticket, issue_not_sent, show_tickets,\
+    wait_for_ticket_message
 from config.settings import TELEGRAM_BOT_TOKEN
 
 
@@ -10,24 +11,28 @@ def main():
     dispatcher = updater.dispatcher
 
     start_handler = CommandHandler('start', start)
-    back_to_main_menu_handler = MessageHandler(Filters.regex('Back to main menu'), main_menu)
 
     conversation_menu_handler = ConversationHandler(
-        entry_points=[start_handler, back_to_main_menu_handler],
+        entry_points=[start_handler],
         states={
-            States.MAIN_MENU: [MessageHandler(Filters.regex('Create a new issue'), write_issue),
-                               MessageHandler(Filters.regex('Show my issues'), show_issues)],
-            States.WRITE_ISSUE: [MessageHandler(Filters.regex('Back to main menu'), main_menu),
-                                 MessageHandler(Filters.regex('I want to attach a file'), attach_file),
-                                 MessageHandler(Filters.text, apply_issue)],
-            States.ATTACH_FILE: [MessageHandler(Filters.regex('Back to main menu'), main_menu),
-                                 MessageHandler(Filters.regex('I do not want to attach a file'), write_issue),
-                                 MessageHandler(Filters.video |
-                                                Filters.photo |
-                                                Filters.document.video |
-                                                Filters.document.image, write_issue)],
-            States.APPLY_ISSUE: [MessageHandler(Filters.regex('Yes'), issue_sent),
-                                 MessageHandler(Filters.regex('No'), issue_not_sent)],
+            States.MAIN_MENU: [
+                CommandHandler('add_ticket', add_ticket),
+                CommandHandler('show_tickets', show_tickets),
+                CallbackQueryHandler(add_ticket, pattern='^add_ticket$'),
+                CallbackQueryHandler(show_tickets, pattern='^show_tickets$'),
+                MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document, wait_for_ticket_message)
+            ],
+            States.APPLY_TICKET: [
+                CallbackQueryHandler(main_menu, pattern='^menu$'),
+                CallbackQueryHandler(issue_sent, pattern='^yes$'),
+                CallbackQueryHandler(issue_not_sent, pattern='^no$')
+            ],
+            States.ADD_TICKET: [
+                CommandHandler('add_ticket', add_ticket),
+                CommandHandler('show_tickets', show_tickets),
+                CallbackQueryHandler(main_menu, pattern='^menu$'),
+                MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document, wait_for_ticket_message)
+            ],
         },
         fallbacks=[]
     )
