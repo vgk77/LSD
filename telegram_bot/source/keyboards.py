@@ -1,15 +1,35 @@
-from telegram import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, ReplyKeyboardRemove
-
-MAIN_MENU_KEYBOARD = ReplyKeyboardMarkup([
-    [KeyboardButton(text='Create a new issue'), KeyboardButton('Show my issues')]
-], resize_keyboard=True)
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-BACK_TO_MAIN_MENU_KEYBOARD = ReplyKeyboardMarkup([
-    [KeyboardButton('Back to main menu')]
-], resize_keyboard=True)
+MENU_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton('📝 Add new ticket', callback_data='add_ticket'),  # Here is an invisible emoji
+     InlineKeyboardButton('📃 Show my tickets', callback_data='show_tickets')]  # Here is an invisible list emoji
+])
 
 
-YES_NO_KEYBOARD = ReplyKeyboardMarkup([
-    [KeyboardButton('Yes'), KeyboardButton('No')]
-], resize_keyboard=True)
+YES_NO_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton('Yes', callback_data='yes'), InlineKeyboardButton('No', callback_data='no')],
+    [InlineKeyboardButton('Back to main menu', callback_data='menu')]
+])
+
+
+BACK_TO_MENU_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton('Back to main menu', callback_data='menu')]
+])
+
+
+ticket_status = {
+    'New': '❗',
+    'InProgress': '🔄',  # Here is the progress sign but it is not visible
+    'Cancelled': '⚠',
+    'Closed': '✅'
+}
+
+
+def get_keyboard_from_tickets(tickets):
+    keyboard = []
+    for ticket in tickets:
+        keyboard.append([InlineKeyboardButton(ticket_status[ticket['status']] + ' ' + ticket['topic'],
+                                              callback_data=f'ticket#{ticket["number"]}')])
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return markup

@@ -68,12 +68,16 @@ def create_ticket(name: str, telegram_id: int, message: str, attachment=None):
         response = requests.patch(TICKET_URI+str(json.loads(content)['number'])+'/',
                                   files={F'attachments': (file_name, open('.temp/'+file_name, 'rb'))})
         os.remove('.temp/'+file_name)
-    if status == 201:
-        return True
+    return status == 201
 
 
 def get_tickets(telegram_id: int):
     status, content = get_request(GET_TICKETS_BY_TELEGRAM_ID_URI+str(telegram_id))
+    return json.loads(content)
+
+
+def get_ticket_by_number(number):
+    status, content = get_request(TICKET_URI+number+'/')
     return json.loads(content)
 
 

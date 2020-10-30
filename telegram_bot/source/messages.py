@@ -14,7 +14,7 @@ class Messages:
                       '<i>We note that your message can not be less than 3 symbols long. Files that you are ' \
                       'attaching should be less than 20Mb.</i>'
 
-    MAIN_MENU = '<b>Main menu</b>\n' \
+    MAIN_MENU = '<b>Main menu</b> 📖\n' \
                 'You are in the main menu. Here you can write a new issue or check the status of your ' \
                 'previous ones.\n<i>You can use buttons to navigate.</i>'
 
@@ -23,10 +23,6 @@ class Messages:
                       '{}\n\n' \
                       '<i>Do you want to send this issue?</i>'
 
-    @staticmethod
-    def get_message_from_tickets_info(**kwargs):
-        text = F'<b>{kwargs["topic"]}</b>\n ' \
-               F'{kwargs["message"]}\n\n' \
-               F'Status: {kwargs["status"]}\n' \
-               F'Date of creation: {get_beautiful_time(kwargs["created_at"])}'
-        return text
+    SHOW_TICKETS = ' <b>Your tickets</b>\n'\
+                   'Here you can see the list of your tickets. You can also view each one by pressing the button ' \
+                   'with ticket topic. You can also go back to the main menu by pressing the corresponding button.'
