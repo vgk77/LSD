@@ -1,8 +1,8 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, ConversationHandler,\
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler,\
     CallbackQueryHandler
 
 from source.handlers import States, start, main_menu, issue_sent, add_ticket, issue_not_sent, show_tickets,\
-    wait_for_ticket_message
+    wait_for_ticket_message, show_chosen_ticket
 from config.settings import TELEGRAM_BOT_TOKEN
 
 
@@ -33,6 +33,12 @@ def main():
                 CallbackQueryHandler(main_menu, pattern='^menu$'),
                 MessageHandler(Filters.text | Filters.photo | Filters.video | Filters.document, wait_for_ticket_message)
             ],
+            States.SHOW_TICKETS: [
+                CommandHandler('add_ticket', add_ticket),
+                CommandHandler('show_tickets', show_tickets),
+                CallbackQueryHandler(main_menu, pattern='^menu$'),
+                CallbackQueryHandler(show_chosen_ticket, pattern='^ticket#[0-9]+$'),
+            ]
         },
         fallbacks=[]
     )

@@ -16,3 +16,11 @@ YES_NO_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
 BACK_TO_MENU_INLINE_KEYBOARD = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton('Back to main menu', callback_data='menu')]
 ])
+
+
+def get_keyboard_from_tickets(tickets):
+    keyboard = []
+    for ticket in tickets:
+        keyboard.append([InlineKeyboardButton(ticket['topic'], callback_data=f'ticket#{ticket["number"]}')])
+    markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return markup
