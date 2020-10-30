@@ -14,7 +14,7 @@ class Messages:
                       '<i>We note that your message can not be less than 3 symbols long. Files that you are ' \
                       'attaching should be less than 20Mb.</i>'
 
-    MAIN_MENU = '<b>Main menu</b>\n' \
+    MAIN_MENU = '<b>Main menu</b> 📖\n' \
                 'You are in the main menu. Here you can write a new issue or check the status of your ' \
                 'previous ones.\n<i>You can use buttons to navigate.</i>'
 
